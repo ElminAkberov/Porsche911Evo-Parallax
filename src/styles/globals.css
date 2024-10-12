@@ -1,27 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: "PorshaC";
+  src: url("/fonts/911v2b.ttf");
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Regular.otf");
 }
+.satoshi{font-family: "Satoshi";}
+.font{font-family: "PorshaC";}
+.bg-gradient{background: linear-gradient(to bottom,#fff 0%, #E2E2E4 100%);}
+.containers { display: flex; justify-content: center; font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;}
+.center {width: 180px;height: 60px;}
+.btn {width: 180px;height: 45px;cursor: pointer;background: transparent;border: 2px solid #7D2A2A;outline: none;transition: 1s ease-in-out;}
+.borders {position: absolute;left: 0;top: 0;fill: none;stroke: #fff;stroke-dasharray: 150 480;stroke-dashoffset: 150;transition: 1s ease-in-out;color: #fff;}
+.btn:hover {transition: 1s ease-in-out;color: #fff;position: relative;background: #7D2A2A;}
+.btn:hover svg {stroke-dashoffset: -480;}
+article{font-size: 2em;color:#fff;text-shadow: 2px 2px 2px #000;background-attachment: fixed;background-position: center;background-repeat: no-repeat;background-size: cover;}
+.shadow-none{text-shadow: 0px 0px 0px  !important;}
+.fonts{font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;font-size: 20px;}
+.bg,.bg-1,.bg-2,.bg-3,.bg-4,.bg-5,.bg-6,.bg-7{width: 100%;height: 100vh;}
+.bg{background-image: url("https://hips.hearstapps.com/autoweek/assets/s3fs-public/6acc85b3-be5e-40ae-a14f-251c66d3f2fa_teaser_original_720x1_5.jpg");}
+.bg-1{background-image: url("https://media.wired.com/photos/59267a6d8d4ebc5ab806a677/master/w_1600,c_limit/Porsche911_Wired_p056-057.jpg");}
+.bg-2{background-image: url("https://media.wired.com/photos/59267a6ecefba457b079a1b1/master/w_1600,c_limit/Porsche911_Wired_p082-083.jpg")}
+.bg-3{background-image: url("https://media.wired.com/photos/59267a6ecefba457b079a1b3/master/w_1600,c_limit/HDI-45034.jpg")}
+.bg-4{background-image: url("https://media.wired.com/photos/59267a6faf95806129f4f95b/master/w_1600,c_limit/Porsche911_Wired_p132-133.jpg")}
+.bg-5{background-image: url("https://media.wired.com/photos/59267a708d4ebc5ab806a679/master/w_1600,c_limit/Porsche911_Wired_p148-p149.jpg")}
+.bg-6{background-image: url("https://media.wired.com/photos/59267a71cefba457b079a1b5/master/w_1600,c_limit/Porsche911_Wired_p182-183.jpg")}
+.bg-7{background-image: url("https://car-images.bauersecure.com/wp-images/3104/1752x1168/992-carrera-4.jpg?mode=max&quality=90&scale=down")}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}

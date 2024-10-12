@@ -1,115 +1,130 @@
-import Image from "next/image";
-import localFont from "next/font/local";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  let sections = ["Intro", "1965s", "1974s", "1988s", "1997s", "2004s", "2011s", '2018s']
+  const audioRef = useRef(null);
+  const [activeSection, setActiveSection] = useState("");
+  const [isActive, setIsActive] = useState(0)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY < 600) {
+        setIsActive(false)
+      } else {
+        setIsActive(true)
+      }
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  })
+  
+  const playAudio = (src) => {
+    if (audioRef.current) {
+      audioRef.current.src = src;
+      audioRef.current.play();
+    }
+  }
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    }, { threshold: 0.5 })
+    sections.forEach((sectionId) => {
+      const section = document.getElementById(sectionId);
+      observer.observe(section);
+    });
+  }, [sections])
+  useEffect(() => {
+    playAudio(`/music/${activeSection}.mp3`);
+  }, [activeSection]);
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <React.Fragment>
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
+      <div className={`fixed top-[30%] bg-transparent fonts  z-20 duration-300 ${isActive ? `opacity-100` : `opacity-0`}`}>
+        <div>
+          {sections.map(music => (
+            <>
+              <Link className={`${activeSection == "Intro" && "text-white"}`} href={`#${music}`} onClick={() => playAudio(`/music/${activeSection}.mp3`)} ><p className={`${activeSection == music ? `font-bold border-b-4 duration-300 border-black ${activeSection == "Intro" && "border-white"}` : ""} my-4 px-3`}>{music}</p></Link>
+            </>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+      <div className="overflow-hidden">
+        <article id="Intro" className="bg h-[100vh]">
+          <div className="text-center pt-10">
+            <h3 className="font ">Ferdinand Porsche</h3>
+            <div className="h-1 w-5 mb-2 bg-white mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">The History of Porsche goes back to 1875 - the birth year of Ferdinand Porsche.It is he laid the foundations for a unique company with strong locals. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="1965s" className="bg-1 text-black shadow-none h-[100vh]">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">1965s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">The first generation of the iconic 911 featured a 2.0L flat-six engine. With its rear-engine layout and round headlights, it set the standard for future sports cars. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="1974s" className="bg-2 shadow-none text-black h-[100vh]">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">1974s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">The G-series introduced new bumper designs due to safety regulations. The engine capacity was increased to 2.7L, and the groundwork for the Turbo model was laid. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="1988s" className="bg-3 h-[100vh] shadow-none text-black">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">1988s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">The Carrera 3.2 featured an improved engine management system and a 5-speed G50 gearbox, offering better reliability while preserving the classic 911 feel. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="1997s" className="bg-4 h-[100vh] shadow-none text-black">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">1997s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">The last air-cooled 911. The 993 series came with aerodynamic improvements and a more modern design. It was also the first to feature twin-turbo technology. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="2004s" className="bg-5 h-[100vh] shadow-none text-black">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">2004s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">Building on the water-cooled engine technology of the 996, the 997 brought back retro styling elements while modernizing the 911`&apos;`s spirit. It came in both coupe and cabrio versions. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="2011s" className="bg-6 h-[100vh] shadow-none text-black">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">2011s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">The 991 series featured a wider body, longer wheelbase, and a lighter chassis. The 3.8L engine brought improved performance and balance. </p>
+          </div>
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+        <article id="2018s" className="bg-[#F7F7F7] max-w-[1440px] shadow-none text-black scale-110  relative  justify-center items-center h-[100vh] mx-auto">
+          <div className="text-center  pt-10">
+            <h3 className="satoshi">2018s</h3>
+            <div className="h-1 w-5 mb-2 bg-black mx-auto"></div>
+            <p className="text-lg fonts w-1/2 mx-auto">Packed with modern technology, the 992 features a digital dashboard and enhanced aerodynamics. It merges the legendary 911 performance with contemporary innovations. </p>
+          </div>
+          <img src="/porsche.avif" alt="" />
+          <audio ref={audioRef} autoPlay loop></audio>
+        </article>
+      </div>
+    </React.Fragment>
   );
+
 }
